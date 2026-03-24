@@ -123,7 +123,52 @@ src/
 
 ---
 
-## Article 4: Specification Requirements
+## Article 4: New Feature vs. Iteration
+
+### Create a new spec when the request:
+- Introduces a user flow that does not exist in any current spec
+- Names a distinct surface, panel, page, or screen (e.g. "notifications panel", "settings page", "contact list")
+- Describes a new persona goal or success criterion
+- Would require its own entry point, landmark region, or route
+
+When this is the case: start the spec-writing conversation, run the full
+Spec Kit pipeline (`specify → clarify → checklist → plan → tasks → implement`),
+and create `specs/[feature-name]/spec.md`.
+
+### Update an existing spec when the request:
+- Changes the visual style of a component already covered by a spec
+- Adds or modifies a state, edge case, or interaction within an existing flow
+- Fixes a bug or adjusts behavior of something already specced
+- Refines copy, spacing, or layout within a screen that already exists
+
+When this is the case: implement the change, then update the relevant
+section of the existing spec per Article 5 (Spec Sync).
+
+### When in doubt:
+Ask: *"Does this introduce a new user goal or a new surface?"*
+- Yes → new spec
+- No → update existing spec
+
+---
+
+## Article 5: Spec Sync (Non-Negotiable)
+
+Any change to a component's visual design or behavior MUST be reflected in
+the corresponding `specs/[feature]/spec.md` before the session ends.
+
+This applies to:
+- Visual styling changes (layout, color, spacing, borders, typography)
+- Behavioral changes (interactions, states, transitions)
+- Component substitutions (e.g. swapping Input for Textarea)
+- New states or edge case handling added during implementation
+
+No implementation change is complete without a spec update. The spec is
+the source of truth for design intent — code without a matching spec is
+undocumented and unmaintainable.
+
+---
+
+## Article 6: Specification Requirements
 
 ### Mandatory Sections
 Every spec MUST include ALL of the following:
@@ -174,7 +219,7 @@ Focus Management:
 
 ---
 
-## Article 5: Component Selection Rules
+## Article 7: Component Selection Rules
 
 ### Decision Framework
 When selecting Fluent v9 components, follow this priority:
@@ -210,7 +255,7 @@ When selecting Fluent v9 components, follow this priority:
 
 ---
 
-## Article 6: Agent Behavior
+## Article 8: Agent Behavior
 
 ### Designer Interaction Rules
 - The designer using this workspace is NOT a developer.
