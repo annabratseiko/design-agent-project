@@ -11,9 +11,17 @@
 ### Source of Truth
 - All UI code MUST use **@fluentui/react-components** (v9). Never use
   @fluentui/react (v8), @fluentui/react-northstar, or any other library.
-- All visual customizations are defined in `.specify/memory/design-language.md`.
-  This file is the single source of truth for colors, typography, spacing,
-  and component overrides.
+- **Fluent v9 defaults** (component APIs, props, slots, tokens, accessibility
+  patterns, motion APIs) come from the canonical LLM-readable docs at
+  `https://storybooks.fluentui.dev/react/llms.txt`. When the agent needs
+  component details, it MUST fetch the relevant page from this index
+  (e.g., `https://storybooks.fluentui.dev/react//llms/components-dialog.txt`).
+- **Project-specific overrides** (brand palette, token overrides, layout
+  spacing rules, component style overrides, theme code) are defined in
+  `.specify/memory/design-language.md`. This file contains ONLY deviations
+  from Fluent defaults — it does NOT duplicate Fluent's own token values.
+- When a conflict exists between `design-language.md` and Fluent defaults,
+  `design-language.md` wins — it represents deliberate project decisions.
 
 ### Theme Usage
 - Import `lightTheme` / `darkTheme` from the shared theme file generated
@@ -33,10 +41,11 @@
   `tokens.spacingVerticalM`, `tokens.fontSizeBase300`, etc.
 
 ### Component Overrides
-- Before using any Fluent v9 component, CHECK Section 5 of
-  `design-language.md` for component-level overrides.
+- Before using any Fluent v9 component, first fetch its documentation from
+  `llms.txt` to understand default props, slots, and accessibility patterns.
+- Then CHECK `design-language.md` for project-specific component overrides.
 - If an override exists, ALWAYS apply it via `makeStyles`.
-- If no override exists, use Fluent v9 defaults.
+- If no override exists, use Fluent v9 defaults from the fetched docs.
 
 ---
 
@@ -225,7 +234,8 @@ Focus Management:
 When selecting Fluent v9 components, follow this priority:
 1. **Accessibility built-in** — prefer components with native a11y support
 2. **API simplicity** — prefer fewer props over more flexible but complex APIs
-3. **Design-language.md alignment** — prefer components that match documented overrides
+3. **llms.txt alignment** — consult the component's doc page for intended usage patterns
+4. **design-language.md alignment** — prefer components that match documented overrides
 
 ### Selection Guide
 

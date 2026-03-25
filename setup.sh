@@ -29,6 +29,12 @@ echo "  Choose 'copilot' when prompted for AI agent."
 echo "  Choose 'bash' or 'powershell' for your platform."
 echo ""
 
+# Preserve existing constitution.md from being overwritten by specify init
+if [ -f ".specify/memory/constitution.md" ]; then
+  cp .specify/memory/constitution.md .specify/memory/constitution.backup.md
+  echo "  (Preserved existing constitution.md)"
+fi
+
 if command -v uvx &> /dev/null; then
   echo "  Initializing for Copilot..."
   uvx --from git+https://github.com/github/spec-kit.git specify init --here --ai copilot
@@ -45,16 +51,19 @@ else
   echo "  Continuing with remaining setup..."
 fi
 
+# Restore the original constitution.md if it was backed up
+if [ -f ".specify/memory/constitution.backup.md" ]; then
+  mv .specify/memory/constitution.backup.md .specify/memory/constitution.md
+  echo "  ✓ Restored original constitution.md"
+fi
+
 echo ""
 
 # ─── Step 2: Copy our custom memory files ───
 echo "▸ Step 2/6: Installing constitution, design language, and router..."
 
-# Back up Spec Kit's default constitution if it exists
-if [ -f ".specify/memory/constitution.md" ]; then
-  mv .specify/memory/constitution.md .specify/memory/constitution.speckit-default.md
-  echo "  (Backed up Spec Kit default constitution)"
-fi
+# constitution.md is already preserved from Step 1 — no renaming needed
+echo "  ✓ constitution.md is the predefined version (unchanged)"
 
 # Our files should already be in place from the archive.
 # If running from scratch, the user copies them from the archive.

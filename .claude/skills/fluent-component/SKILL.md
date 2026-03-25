@@ -140,7 +140,7 @@ If a state doesn't apply, comment why in code.
 - [ ] TypeScript interface for props
 - [ ] Named export only
 - [ ] Styles in .styles.ts
-- [ ] design-language.md Section 5 checked for overrides
+- [ ] design-language.md Section 4 checked for overrides
 
 ## Common Patterns
 

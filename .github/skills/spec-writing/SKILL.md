@@ -1,268 +1,315 @@
 ---
 name: spec-writing
 description: >
-  How to write a complete feature spec through designer conversation.
-  Use during the /speckit.specify phase. Covers section-by-section
-  guidance, depth standards, probe sequences, and quality checks
-  for each spec section.
+  Write comprehensive feature specifications through designer conversation.
+  Use when starting a new feature spec, filling in spec gaps, or reviewing
+  spec completeness. Covers all sections from overview through accessibility
+  annotations, with examples of shallow vs deep coverage and exact
+  question prompts for each section.
 user-invocable: true
 ---
 
-# Skill: Write a Feature Spec
+# Skill: Write a Feature Specification
 
-Follow this when building a spec through conversation with a designer.
-Work section by section. Do not skip ahead.
-
-## Conversation Flow
-
-```
-1. Overview (2-3 turns)
-   ↓
-2. User Flows (3-5 turns)
-   ↓
-3. States & Data (2-4 turns)
-   ↓
-4. Edge Cases (2-3 turns, agent proposes most)
-   ↓
-5. Accessibility (2-3 turns, agent leads)
-   ↓
-6. Content & Copy (1-2 turns)
-   ↓
-7. Interactions (1-2 turns)
-   ↓
-8. Responsive (1-2 turns)
-   ↓
-9. Coverage check → gate → advance
-```
-
-## Section 1: Overview
-
-### What to ask (1-2 questions per turn):
-- "What feature are you building? One sentence."
-- "Who uses this — what's their role and context?"
-- "What problem does this solve? What do they do today without it?"
-- "How will we know it works? What's the success metric?"
-
-### Depth standard:
-```
-SHALLOW (not enough):
-  "A file upload for users"
-
-DEEP (sufficient):
-  Feature: Bulk file uploader for document management
-  Persona: Legal assistants uploading 10-50 contracts daily, desktop
-  Problem: Currently email files to admin who uploads manually, 2-day delay
-  Success: Self-service upload, <30 seconds per batch, zero admin involvement
-```
-
-### Anti-goals probe:
-After the overview, always ask:
-"What should this feature explicitly NOT do? Knowing boundaries prevents scope creep."
+Follow this procedure to build a complete spec through conversation.
+Use the conversational router (`.specify/memory/router.md`) to track
+coverage and gate phase transitions.
 
 ---
 
-## Section 2: User Flows
+## Step 1: Open the Conversation
 
-### What to ask:
-- "Walk me through the happy path step by step — what does the user do, what does the system respond?"
-- "How does the user get here? What triggers this flow?"
-- "What happens after they complete the action?"
+Start by understanding the feature at a high level.
+Ask these questions ONE AT A TIME (never dump all at once):
 
-### Then probe for alternatives:
-- "Is there another way to accomplish this?"
-- "What if the user changes their mind mid-flow? Can they cancel? Is data preserved?"
-
-### Depth standard:
 ```
-SHALLOW:
-  "User uploads files and sees them in the list."
-
-DEEP:
-  Step 1: User clicks "Upload" button in toolbar → file picker opens
-  Step 2: User selects 1-50 files (.pdf, .docx, .xlsx only) → selected files shown in staging area
-  Step 3: User reviews file list, can remove individual files → remove button per row
-  Step 4: User clicks "Upload all" → progress bar shows per-file progress
-  Step 5: All files complete → success toast, files appear in document list
-  
-  Alternative: User drags files onto the drop zone instead of step 1-2
-  Abort: User clicks "Cancel" at step 3-4 → confirmation dialog, staged files cleared
-  Entry: Toolbar button on Document Management page, or drag onto page at any time
-  Exit: Stay on Document Management page, new files highlighted in list
+Q1: "What feature are you designing? Give me the elevator pitch."
+Q2: "Who's the primary user? What's their role and how tech-savvy are they?"
+Q3: "Where will they use this — desktop, tablet, mobile, or all?"
+Q4: "What problem does this solve? What's the workaround today?"
+Q5: "How will we know it's working? What's the measurable outcome?"
 ```
+
+After these 5 answers, summarize what you've heard and confirm:
+> "Here's what I understand: [summary]. Ready to dig into the details?"
 
 ---
 
-## Section 3: States & Data
+## Step 2: Map User Flows
 
-### Walk through each state systematically:
-- "What does this look like when there's NO data — first time, empty list?"
-- "What appears while data is loading?"
-- "What happens when the API fails?"
-- "After a successful action, is there a confirmation?"
+Walk through the feature step by step.
 
-### Data boundaries probe:
-- "What's the realistic range? 0 items? 1? Typical count? Maximum?"
-- "What happens when text is too long — a file name that's 200 characters?"
-
-### Depth standard per state:
+### Happy Path
 ```
-EMPTY STATE:
-  Visual: Illustration + "No documents yet" heading + "Upload your first document" subtext + Upload CTA button
-  Aria: Region labeled "Empty state", heading level h2
+"Walk me through the happy path. The user opens [entry point] and..."
+```
+Document each step as: **User Action → System Response**
 
-LOADING STATE:
-  Visual: Skeleton rows matching table layout (5 rows)
-  Aria: role="status", aria-label="Loading documents"
-  Duration: Show skeleton immediately, switch to data after load
+### Entry & Exit Points
+```
+"How does the user get here? Button on another page, nav item, notification, deep link?"
+"What happens after they complete the action? Stay here, redirect, confirmation?"
+```
 
-ERROR STATE:
-  Visual: MessageBar intent="error" above table: "Unable to load documents. Check your connection and try again."
-  Action: "Retry" button in MessageBar
-  Aria: role="alert", announced immediately
-  Focus: Stays where it was (MessageBar announced via live region)
+### Alternative Flows
+```
+"Are there other ways to accomplish this? For example, [suggest based on context]."
+```
+
+### Abort Flow
+```
+"What if they change their mind at step 3? Cancel button? Confirmation? Data lost?"
+```
+
+### Depth Check
+Shallow: "User uploads a file"
+Deep: "User clicks 'Upload' button (primary, in toolbar) → file picker opens (native OS) → user selects 1+ files (max 10, max 10MB each, accepts .jpg .png .pdf) → upload progress bar appears per file (ProgressBar, determinate) → on success, file appears in the list with thumbnail → on failure, inline error with retry button"
+
+Always push for deep coverage on flows.
+
+---
+
+## Step 3: Enumerate States
+
+For every screen/component, systematically cover ALL states.
+
+### Prompts for Each State
+
+**Default:** "What does this look like in normal use, with typical data?"
+
+**Empty:** "What about first-time use with no data? I'd suggest a helpful
+message with a CTA button — something like 'No [items] yet. [Add your first one].'"
+
+**Loading:** "While data loads, what does the user see? I'd suggest skeleton
+screens matching the table layout — they preserve spatial context better than
+a spinner. Estimated load time?"
+
+**Error:** "If the API fails, what happens? I need three things:
+1. What the user sees (inline error, toast, full error page?)
+2. Whether they can retry
+3. Whether any data is lost"
+
+**Success:** "After completing the action, how do we confirm?
+Toast notification (transient), MessageBar (persistent), or redirect?"
+
+**Partial:** "What if some items succeed and others fail? Mixed state?"
+
+**Permission:** "Are there user roles that see this differently?
+What does an unauthorized user see — hidden feature, disabled with tooltip,
+or error message?"
+
+### Data Boundaries
+```
+"Let's talk boundaries:
+- Zero items: [empty state behavior]
+- One item: [any special case?]
+- Typical count: [how many?]
+- Maximum: [is there a hard limit? What happens at 10,000?]
+- Long text: [what truncates? Ellipsis? Tooltip? Wrap?]"
 ```
 
 ---
 
-## Section 4: Edge Cases
+## Step 4: Surface Edge Cases
 
-### The agent PROPOSES most edge cases — don't wait for the designer.
+Proactively suggest edge cases the designer hasn't thought of.
+Don't wait to be asked — propose them.
 
-Standard edge cases to cover for EVERY feature:
-
+### Network & Reliability
 ```
-NETWORK:
-- "What if the network drops mid-upload? Partial progress lost?"
-- "What about timeout — file takes 60+ seconds?"
-
-CONCURRENCY:
-- "Can two people upload to the same folder simultaneously?"
-- "What if someone deletes a file while another person is viewing it?"
-
-VALIDATION:
-- "Wrong file type? Too large? What are the exact limits and error messages?"
-
-NAVIGATION:
-- "Browser back button during upload — warning dialog or lose progress?"
-- "Session timeout during multi-file upload?"
-
-PERFORMANCE:
-- "50 files at once — do we show individual progress or aggregate?"
-- "1000 files in the list — pagination or virtualization?"
-
-OVERFLOW:
-- "File name is 200 characters — truncate with tooltip?"
-- "100 tags on a document — how displayed?"
+"For [async operation]: what happens if the network drops mid-request?
+I'd suggest an inline error with retry: 'Unable to save. [Retry]'"
 ```
 
-### Probing technique:
-Don't just list edge cases — propose a handling recommendation:
-"If the network drops during upload, I'd suggest: pause the queue,
-show a retry button per failed file, and preserve completed uploads.
-Does that work?"
-
----
-
-## Section 5: Accessibility Annotations
-
-### Use the accessibility-annotation skill here.
-For each screen/state discussed in sections 2-4, create the full annotation.
-
-### Key prompts for the designer:
-- "For keyboard users, the tab order through this screen should be: [list]. Does that match your layout?"
-- "When [dynamic element] updates, should screen readers announce it immediately or wait?"
-- "After closing this dialog, focus should return to the button that opened it. Correct?"
-
-The agent should LEAD this section — propose all annotations and ask
-the designer to confirm, rather than asking the designer to invent them.
-
----
-
-## Section 6: Content & Copy
-
-### Get exact text for:
-- Button labels: "Upload", "Cancel", "Retry", "Delete"
-- Headings: page title, section headers
-- Error messages: exact wording for each error scenario
-- Empty state: heading + description + CTA label
-- Success messages: confirmation text
-- Truncation: how to shorten long text
-
-### Depth standard:
+### Concurrency
 ```
-SHALLOW:
-  "Show an error if upload fails"
+"Can multiple users edit this at the same time? If user A deletes a row
+that user B is viewing, what happens?"
+```
 
-DEEP:
-  Error: File too large
-  Message: "'{filename}' exceeds the 25 MB limit. Try compressing the file or splitting it into smaller parts."
-  Placement: Inline below the file row in the staging area
-  Severity: error
-  Dismissible: no (clears when file is removed)
+### Navigation
+```
+"If the user hits browser back at step 2 of this flow — go to step 1
+with data preserved? Exit the flow? Show a 'discard changes?' warning?"
+```
+
+### Performance
+```
+"If there are 10,000 rows in this table, do we need pagination, infinite
+scroll, or virtualization? What about the bulk select-all — does it select
+all visible or all 10,000?"
+```
+
+### Timing
+```
+"This action could take 30+ seconds. After 3 seconds I'd switch from
+inline spinner to a progress indicator with cancel. Sound right?"
 ```
 
 ---
 
-## Section 7: Interactions
+## Step 5: Write Accessibility Annotations
 
-### For each interactive element, confirm:
-- Hover state: what changes visually?
-- Focus state: visible focus ring (Fluent default usually sufficient)
-- Active/pressed: what visual feedback?
-- Disabled: when is it disabled? What does it look like?
+For EVERY screen and state, annotate using the accessibility-annotation
+skill. Don't skip this — invoke `/accessibility-annotation` mentally
+and work through each step:
 
-### For transitions:
-- Opening a panel: slide from right? fade in?
-- Loading → loaded: skeleton to content swap
-- Success notification: toast duration, auto-dismiss?
+1. Landmark roles
+2. Heading hierarchy
+3. Focus order (numbered)
+4. Live regions
+5. Focus management after dynamic changes
+6. Error association
+7. Color independence check
+8. Touch targets
+9. Reduced motion
+
+### Key Questions for Designer
+```
+"When [dynamic element] appears, should screen readers announce it
+immediately (assertive) or wait for a pause (polite)?
+I'd suggest polite for [reason]."
+
+"After the user deletes an item, where should keyboard focus go?
+I'd suggest the next item in the list."
+
+"Are there keyboard shortcuts for power users? If yes, how are they
+discoverable — tooltip on hover, Ctrl+/ help panel?"
+```
 
 ---
 
-## Section 8: Responsive
+## Step 6: Write Content & Copy
 
-### Ask once, get three breakpoints:
-"This is designed for desktop. On tablet (768px) and mobile (320px):
+Get exact text for every string in the UI.
+
+### Labels
+```
+"What's the page heading?"
+"What does the primary button say? I'd suggest [verb] + [noun]:
+'Create project', 'Send invitation', 'Delete selected items'."
+"What does the secondary button say? Usually 'Cancel' or 'Back'."
+```
+
+### Error Messages (exact wording)
+Every error message needs:
+1. What went wrong (clear, non-technical)
+2. What to do about it (actionable)
+
+```
+"For [validation scenario], the error should say:
+'[What went wrong]. [What to do about it].'
+For example: 'Email address is required. Enter your work email to continue.'"
+```
+
+### Empty States (three parts)
+```
+"The empty state needs:
+1. What this area is for: 'Projects'
+2. Why it's empty: 'You haven't created any projects yet.'
+3. CTA: 'Create project' button
+Sound right?"
+```
+
+### Truncation Rules
+```
+"When [element text] is longer than [container], what happens?
+- Truncate with ellipsis + tooltip on hover?
+- Wrap to next line?
+- Expand/collapse?"
+```
+
+---
+
+## Step 7: Define Responsive Behavior
+
+```
+"We've designed this for desktop. At tablet/mobile widths:
 - What stacks vertically?
 - What collapses into a menu or drawer?
 - What gets hidden entirely?
-- Do interaction patterns change (e.g., swipe)?"
+- Does the interaction model change (swipe instead of hover)?"
+```
 
-If designer defers: mark as [DEFERRED] with a note. Design the
-desktop version to use flexible layout (flex, grid) so it won't
-fight mobile adaptation later.
+### Breakpoint Template
+| Element              | Desktop (1440+) | Tablet (768-1439) | Mobile (320-767) |
+|---------------------|-----------------|-------------------|------------------|
+| Sidebar navigation  | Visible          | Collapsed/drawer  | Hidden/hamburger |
+| Data table          | Full columns     | Fewer columns     | Card layout      |
+| Bulk action bar     | Horizontal       | Horizontal        | Bottom sheet     |
+| Form layout         | Side-by-side     | Stacked           | Stacked          |
+| Dialog              | Centered modal   | Centered modal    | Full-screen      |
 
 ---
 
-## Quality Check Before Advancing
+## Step 8: Check Coverage & Gate
 
-Before moving from specify → plan, verify:
+Before moving to the Plan phase, run the gate check:
 
-### Required (all must pass):
-- [ ] Persona defined with role and context
-- [ ] Problem statement with current workaround
-- [ ] Success criteria (measurable)
-- [ ] Happy path flow — step by step
-- [ ] Entry and exit points
-- [ ] Default, empty, loading, error states — all with visual + a11y details
-- [ ] All destructive actions flagged
-- [ ] Network failure handling per async operation
-- [ ] Validation errors with exact messages
-- [ ] Landmark roles mapped
-- [ ] Heading hierarchy defined
-- [ ] Focus order numbered
-- [ ] Keyboard interactions documented
-- [ ] Key button/heading labels written
-- [ ] Error messages with exact wording
+### Required Items (ALL must be covered)
+```
+□ Primary persona defined
+□ Usage context established
+□ Problem statement clear
+□ Success criteria measurable
+□ At least one complete user flow
+□ Entry and exit points defined
+□ Default state described
+□ Empty state described
+□ Loading state described
+□ Error state described
+□ All interactive elements identified
+□ All destructive actions flagged
+□ Network failure handling per async operation
+□ Validation errors with exact messages
+□ Landmark roles assigned
+□ Heading hierarchy defined
+□ Focus order mapped
+□ Keyboard interactions documented
+□ Key labels and error messages written
+□ Design-language.md referenced
+```
 
-### Should (≥70% or explicitly deferred):
-- [ ] Anti-goals
-- [ ] Alternative flows
-- [ ] Abort flow
-- [ ] Success/confirmation state
-- [ ] Data boundaries
-- [ ] Concurrent editing
-- [ ] Browser back/forward
-- [ ] Overflow/truncation
-- [ ] Screen reader announcements for dynamic content
-- [ ] Focus management after dynamic changes
-- [ ] Responsive at ≥2 breakpoints
+### Should Items (≥70% covered or deferred)
+```
+□ Secondary personas
+□ Anti-goals
+□ Alternative flows
+□ Abort flow
+□ Error recovery flow
+□ Success/confirmation state
+□ Data boundaries
+□ Hover/focus/active/disabled per element
+□ Concurrent editing handling
+□ Browser back/forward behavior
+□ Text overflow / truncation
+□ Screen reader announcements
+□ Focus management after dynamic changes
+□ Empty state copy
+□ Responsive behavior
+□ New component overrides
+```
+
+### Report Status
+> "Spec coverage: [X]/20 required, [Y]/16 recommended.
+> [Gaps remaining]. Ready to move to planning?"
+
+---
+
+## Depth Quality Guide
+
+For each spec item, judge whether coverage is shallow or deep:
+
+| Section        | Shallow (needs follow-up)          | Deep (sufficient)                 |
+|----------------|-----------------------------------|------------------------------------|
+| State          | "Show an error"                    | Exact message, placement, retry   |
+| Flow step      | "User uploads file"                | File types, size limit, progress  |
+| Edge case      | "Handle network failure"           | Error UI, retry, data preservation|
+| A11y           | "Make it accessible"               | Landmarks, focus order, aria-live |
+| Copy           | "Show a message"                   | Exact wording, tone, CTA          |
+| Responsive     | "It's responsive"                  | Per-element behavior per breakpoint|
+
+Always push for deep. If designer gives shallow, follow up:
+> "You mentioned 'show an error' — I need to know: What exact message?
+> Where does it appear (inline, toast, dialog)? Can the user retry?
+> Is any data lost?"

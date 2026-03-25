@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function App() {
+export function App() {
   const styles = useStyles();
 
   return (
