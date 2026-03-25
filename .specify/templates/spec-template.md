@@ -1,203 +1,128 @@
-# Feature Spec: [Feature Name]
+# Feature Specification: [FEATURE NAME]
 
-> **Status:** Draft | In Review | Approved
-> **Author:** [Designer Name]
-> **Date:** [Date]
-> **Spec Kit Feature ID:** [auto-generated]
+**Feature Branch**: `[###-feature-name]`  
+**Created**: [DATE]  
+**Status**: Draft  
+**Input**: User description: "$ARGUMENTS"
 
----
+## User Scenarios & Testing *(mandatory)*
 
-## 1. Overview
+<!--
+  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
+  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
+  you should still have a viable MVP (Minimum Viable Product) that delivers value.
+  
+  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
+  Think of each story as a standalone slice of functionality that can be:
+  - Developed independently
+  - Tested independently
+  - Deployed independently
+  - Demonstrated to users independently
+-->
 
-| Field            | Value                                |
-|------------------|--------------------------------------|
-| Feature name     |                                      |
-| One-line summary |                                      |
-| Primary persona  |                                      |
-| Usage context    | Desktop / Tablet / Mobile / All      |
-| Success criteria |                                      |
+### User Story 1 - [Brief Title] (Priority: P1)
 
-### Problem Statement
-_What's broken or missing today? What workaround exists?_
+[Describe this user journey in plain language]
 
-### Anti-Goals
-_What this feature is explicitly NOT._
+**Why this priority**: [Explain the value and why it has this priority level]
 
----
+**Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
 
-## 2. User Flows
+**Acceptance Scenarios**:
 
-### 2.1 Entry Points
-_How does the user arrive at this feature?_
-
-### 2.2 Primary Flow (Happy Path)
-```
-Step 1: [User action] → [System response]
-Step 2: [User action] → [System response]
-Step 3: [User action] → [System response]
-...
-```
-
-### 2.3 Alternative Flows
-_Different paths to the same goal._
-
-### 2.4 Abort Flow
-_User cancels mid-action. What happens to partial data?_
-
-### 2.5 Exit Points
-_What happens after completion?_
+1. **Given** [initial state], **When** [action], **Then** [expected outcome]
+2. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-## 3. States & Variations
+### User Story 2 - [Brief Title] (Priority: P2)
 
-| State       | Description                           | Visual             |
-|-------------|---------------------------------------|---------------------|
-| Default     |                                       |                     |
-| Empty       | Zero items / first-time use           |                     |
-| Loading     | Data being fetched                    |                     |
-| Error       | API failure / validation error        |                     |
-| Success     | Action completed                      |                     |
-| Partial     | Incomplete data / mixed status        |                     |
-| Unauthorized| User lacks permission                 |                     |
+[Describe this user journey in plain language]
 
-### Data Boundaries
-| Boundary    | Count | Behavior                             |
-|-------------|-------|--------------------------------------|
-| Zero items  | 0     |                                      |
-| One item    | 1     |                                      |
-| Typical     | N     |                                      |
-| Maximum     | Max   |                                      |
-| Overflow    | Text  |                                      |
+**Why this priority**: [Explain the value and why it has this priority level]
+
+**Independent Test**: [Describe how this can be tested independently]
+
+**Acceptance Scenarios**:
+
+1. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-## 4. Edge Cases
+### User Story 3 - [Brief Title] (Priority: P3)
 
-| Scenario                      | Handling                             |
-|-------------------------------|--------------------------------------|
-| Network failure during action |                                      |
-| Validation error              |                                      |
-| Concurrent edit by other user |                                      |
-| Session timeout mid-flow      |                                      |
-| Browser back button           |                                      |
-| Text overflow                 |                                      |
-| Max data volume               |                                      |
+[Describe this user journey in plain language]
 
----
+**Why this priority**: [Explain the value and why it has this priority level]
 
-## 5. Accessibility Annotations
+**Independent Test**: [Describe how this can be tested independently]
 
-### Screen: [Screen Name] — State: [State]
+**Acceptance Scenarios**:
 
-**Landmarks:**
-| Role           | Element              | Label                     |
-|----------------|----------------------|---------------------------|
-| main           |                      |                           |
-| nav            |                      |                           |
-| complementary  |                      |                           |
-
-**Heading Hierarchy:**
-```
-h1: [Page title]
-  h2: [Section]
-    h3: [Subsection]
-```
-
-**Focus Order:**
-| #  | Element                | Keyboard Interaction          |
-|----|------------------------|-------------------------------|
-| 1  |                        | Tab to focus, Enter to activate|
-| 2  |                        |                               |
-| 3  |                        |                               |
-
-**Live Regions:**
-| Element        | Trigger              | aria-live   | Announcement       |
-|----------------|----------------------|-------------|---------------------|
-|                |                      | polite      |                     |
-
-**Focus Management:**
-| Action              | Focus Moves To                       |
-|---------------------|--------------------------------------|
-| Modal opens         | First focusable element in modal     |
-| Modal closes        | Trigger element that opened it       |
-| Item deleted        | Next item in list                    |
-| Inline content added| New content                          |
+1. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-## 6. Content & Copy
+[Add more user stories as needed, each with an assigned priority]
 
-### Key Labels
-| Element          | Text                                  |
-|------------------|---------------------------------------|
-| Page heading     |                                       |
-| Primary CTA      |                                       |
-| Secondary CTA    |                                       |
+### Edge Cases
 
-### Error Messages
-| Scenario         | Message                               |
-|------------------|---------------------------------------|
-|                  |                                       |
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right edge cases.
+-->
 
-### Empty State
-| Element          | Text                                  |
-|------------------|---------------------------------------|
-| Heading          |                                       |
-| Description      |                                       |
-| CTA              |                                       |
+- What happens when [boundary condition]?
+- How does system handle [error scenario]?
 
-### Truncation Rules
-| Element          | Max Length | Truncation Method             |
-|------------------|-----------|-------------------------------|
-|                  |           | Ellipsis / Wrap / Tooltip     |
+## Requirements *(mandatory)*
 
----
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right functional requirements.
+-->
 
-## 7. Interactions
+### Functional Requirements
 
-### Interactive Elements
-| Element          | Hover        | Focus        | Active   | Disabled     |
-|------------------|-------------|--------------|----------|--------------|
-|                  |             |              |          |              |
+- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
+- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
+- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
+- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
+- **FR-005**: System MUST [behavior, e.g., "log all security events"]
 
-### Transitions
-| Trigger          | Animation                | Duration | Easing        |
-|------------------|--------------------------|----------|---------------|
-|                  |                          |          |               |
+*Example of marking unclear requirements:*
 
----
+- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
-## 8. Responsive Behavior
+### Key Entities *(include if feature involves data)*
 
-| Breakpoint       | Layout Changes                        |
-|------------------|---------------------------------------|
-| Desktop (1440+)  |                                       |
-| Tablet (768-1439)|                                       |
-| Mobile (320-767) |                                       |
+- **[Entity 1]**: [What it represents, key attributes without implementation]
+- **[Entity 2]**: [What it represents, relationships to other entities]
 
----
+## Success Criteria *(mandatory)*
 
-## 9. Component Mapping
+<!--
+  ACTION REQUIRED: Define measurable success criteria.
+  These must be technology-agnostic and measurable.
+-->
 
-_Populated during the Plan phase._
+### Measurable Outcomes
 
-| UI Element       | Fluent v9 Component | Why (not alternatives)  | Key Props    |
-|------------------|---------------------|-------------------------|--------------|
-|                  |                     |                         |              |
+- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
+- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
+- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
+- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
 
----
+## Assumptions
 
-## 10. Open Questions
+<!--
+  ACTION REQUIRED: The content in this section represents placeholders.
+  Fill them out with the right assumptions based on reasonable defaults
+  chosen when the feature description did not specify certain details.
+-->
 
-| #  | Question                              | Status  | Resolution      |
-|----|---------------------------------------|---------|-----------------|
-|    |                                       | Open    |                 |
-
----
-
-## 11. Deferred Items
-
-| Item                    | Reason                | Revisit When          |
-|-------------------------|-----------------------|-----------------------|
-|                         |                       |                       |
+- [Assumption about target users, e.g., "Users have stable internet connectivity"]
+- [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
+- [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
+- [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
