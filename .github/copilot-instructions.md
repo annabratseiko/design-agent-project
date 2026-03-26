@@ -145,6 +145,53 @@ them silently when the phase is ready.
 7. **Implement** — **FIRST read `.claude/skills/fluent-component/SKILL.md` and
    `.claude/skills/accessibility-annotation/SKILL.md`.** Then run
    `/speckit.implement` to generate prototype.
+8. **Sync** — Run `/speckit.sync` to reverse-sync any visual or behavioral
+   code changes back into spec.md and plan.md. This enforces Article 5
+   (Spec Sync). Runs automatically as a post-implement hook (see
+   `.specify/extensions.yml`).
+
+## Post-Edit Spec Sync (MANDATORY)
+
+**This rule applies to ALL code changes — not just the formal pipeline.**
+
+Whenever you modify a `.tsx`, `.styles.ts`, or any source file inside
+`src/features/` or `src/components/` that changes visual appearance or
+behavior (styling, layout, component swaps, state handling, copy,
+accessibility attributes, responsive behavior), you MUST:
+
+1. **Identify the affected feature** — determine which `specs/[feature]/`
+   the changed files belong to.
+2. **Run `/speckit.sync`** silently after making the code change.
+3. **Present the drift report** to the designer and apply approved updates.
+4. **If new project-wide overrides were introduced** (tokens, component
+   styles, layout spacing), ensure `design-language.md` is updated too.
+
+This applies whether the change came from:
+- A direct designer request ("make the header smaller")
+- A bug fix that alters visual output
+- A refactor that changes component structure
+- Any ad-hoc UI iteration outside the formal pipeline
+
+**If no spec exists yet**, skip the sync and note: "This change isn't
+covered by a spec yet — consider running the pipeline to document it."
+
+**Never** silently edit code without updating the spec. The designer
+should always see what spec sections were affected.
+
+## Session Resume (Coverage Persistence)
+
+The conversational router tracks spec coverage in-memory, but sessions
+can end unexpectedly. To prevent losing progress:
+
+- **At session start**: Check if `specs/[feature]/coverage-checkpoint.md`
+  exists for the current feature branch. If it does, read it and resume
+  from where you left off — do NOT re-ask covered items.
+- **During specify/clarify**: After every designer turn that advances
+  coverage, update the checkpoint file silently.
+- **After SPECIFY → PLAN gate passes**: Delete the checkpoint file
+  (coverage is now encoded in spec.md).
+
+See `router.md` for the full checkpoint format and rules.
 
 ## Skills (MANDATORY at Pipeline Steps)
 Skills live in `.claude/skills/` and MUST be read and followed at their

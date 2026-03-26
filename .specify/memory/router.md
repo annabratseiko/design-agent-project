@@ -159,3 +159,72 @@ When the designer can't decide now:
 
 Deferred [S] items count toward the 70% threshold.
 Deferred [R] items do NOT — they must be resolved before advancing.
+
+---
+
+## Coverage Checkpoint Persistence
+
+The coverage matrix is tracked in-memory during a conversation, but
+conversations can end mid-pipeline (session timeout, context limit, user
+closes the window). To prevent losing progress, the agent MUST persist
+coverage state to a checkpoint file.
+
+### Checkpoint File
+- **Location**: `specs/[feature-name]/coverage-checkpoint.md`
+- **Created**: When `/speckit.specify` starts (alongside the spec)
+- **Updated**: After every designer turn that advances coverage
+- **Deleted**: After the SPECIFY → PLAN gate is passed (coverage is
+  now captured in the spec itself)
+
+### Checkpoint Format
+```markdown
+# Coverage Checkpoint — [Feature Name]
+Last updated: [ISO timestamp]
+Pipeline phase: SPECIFY | CLARIFY
+Gate status: NOT READY | READY
+
+## Required Items (20 total)
+- [x] 1.1 Primary persona — [brief note]
+- [x] 1.2 Usage context — [brief note]
+- [ ] 3.1 Primary flow — [not yet covered]
+...
+
+## Should Items (16 total, need ≥12)
+- [x] 1.3 Secondary personas — [brief note]
+- [~] 9.1 Desktop layout — [DEFERRED: after prototype]
+- [ ] 6.3 Concurrent editing — [not yet covered]
+...
+
+## Open Questions
+1. [question from conversation]
+2. [question from conversation]
+
+## Conversation Summary
+- Turn 1-3: Covered persona, problem statement, success criteria
+- Turn 4-6: Walked through happy path, identified entry/exit points
+- Turn 7: Session ended — resume from User Flows alternative paths
+```
+
+### Session Resume Rules
+At the start of every conversation, BEFORE asking the designer any
+questions:
+1. Check if `specs/[feature-name]/coverage-checkpoint.md` exists for
+   the current feature branch
+2. If it exists, read it and restore coverage state
+3. Tell the designer where you left off:
+   > "Welcome back! Last time we covered [X/20] required items and
+   > [Y/16] recommended items for [feature]. We were working on
+   > [last topic]. Ready to continue?"
+4. Resume from the next uncovered item — do NOT re-ask covered items
+
+### When to Update the Checkpoint
+- After every designer turn that provides new coverage information
+- After any explicit deferral
+- After any gate check (pass or fail)
+- When the session is about to end (if detectable)
+
+### Checkpoint Cleanup
+- Delete the checkpoint file after SPECIFY → PLAN gate passes
+  (all coverage is now encoded in spec.md)
+- If the designer restarts the spec from scratch, delete the old
+  checkpoint and create a new one

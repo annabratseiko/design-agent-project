@@ -1,0 +1,12 @@
+hooks:
+  after_implement:
+    - extension: spec-sync
+      command: speckit.sync
+      description: >
+        Reverse-sync any visual or behavioral code changes back into spec.md
+        and plan.md to enforce Article 5 (Spec Sync) of the constitution.
+      prompt: >
+        Detect all code-to-spec drift introduced during implementation and
+        propose spec updates for designer approval.
+      optional: false
+      enabled: true

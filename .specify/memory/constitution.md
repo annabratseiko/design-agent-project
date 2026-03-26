@@ -302,3 +302,15 @@ Follow the Spec Kit pipeline in order:
 6. `/speckit.analyze` — Cross-artifact consistency check
 7. `/speckit.tasks` — Break into implementation tasks
 8. `/speckit.implement` — Generate Fluent v9 prototype
+9. `/speckit.sync` — Reverse-sync code changes back into spec.md,
+   plan.md, and design-language.md. Detects cross-feature impact and
+   flags unimplemented spec items. Runs automatically after implement
+   AND after any ad-hoc UI change (see Post-Edit Spec Sync rule).
+
+### Post-Edit Spec Sync (Non-Negotiable)
+Any code change that affects visual appearance or behavior — whether from
+the formal pipeline or an ad-hoc designer request — MUST trigger
+`/speckit.sync`. This applies to changes in `src/features/`,
+`src/components/`, and any `.tsx` or `.styles.ts` file. The sync also
+covers `design-language.md` when new project-wide token or component
+overrides are introduced.
